@@ -244,6 +244,9 @@
             outline: none;
             border-color: var(--primary-color);
         }
+
+        /* deposit buttons layout inside modal */
+        .deposit-grid a { min-width: 110px; }
     </style>
 </head>
 <body>
@@ -286,8 +289,11 @@
                     <div class="balance-display me-3">
                         <span data-i18n="balance">Balance</span>: $<span id="userBalance">0.00</span>
                     </div>
-                    <button class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#depositModal" data-i18n="deposit">Deposit</button>
-                    <button class="btn btn-primary" data-i18n="logout" onclick="window.location.href='https://hixhunt.github.io/BoostX-AI-Login/'">
+                    <!-- Deposit button opens modal -->
+                    <button id="depositBtn" class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#depositModal" data-i18n="deposit">Deposit</button>
+                    <!-- Withdraw button -->
+                    <button class="btn btn-warning me-2" id="withdrawBtn" data-i18n="withdraw">Withdraw</button>
+                    <button class="btn btn-primary" id="logoutBtn" data-i18n="logout">
   Logout
 </button>
 
@@ -460,15 +466,15 @@
                             <div class="mb-4">
                                 <div class="d-flex justify-content-between mb-2">
                                     <h6 data-i18n="options.accuracy">Prediction Accuracy</h6>
-                                    <span>92%</span>
+                                    <span>9%</span>
                                 </div>
                                 <div class="progress">
-                                    <div class="progress-bar" role="progressbar" style="width: 92%"></div>
+                                    <div class="progress-bar" role="progressbar" style="width: 98%"></div>
                                 </div>
                             </div>
                             <div class="mb-4">
                                 <h6 data-i18n="options.strategy">Suggested Strategy</h6>
-                                <p data-i18n="options.ethStrategy">Spread PUT options between $3,200 and $3,500 for 30-day expiration</p>
+                                <p data-i18n="options.ethStrategy">Spread PUT options between $3,200 and $3,500 for 1 day expiration</p>
                             </div>
                             <button class="btn btn-primary w-100 mt-3" id="ethAnalysisBtn" data-i18n="options.viewAnalysis">View Detailed Analysis</button>
                         </div>
@@ -510,31 +516,39 @@
         </div>
     </section>
 
-    <!-- Deposit Modal -->
-    <div class="modal fade" id="depositModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" data-i18n="depositModal.title">Deposit Funds</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-4">
-                        <label class="form-label" data-i18n="depositModal.amount">Amount (USD)</label>
-                        <input type="number" class="form-control form-control-lg" id="depositAmount" placeholder="100.00" min="10">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" data-i18n="depositModal.method">Payment Method</label>
-                        <iframe src="https://nowpayments.io/embeds/payment-widget?iid=4733269114" width="410" height="696" frameborder="0" scrolling="no" style="overflow-y: hidden;">
-    Can't load widget
-</iframe>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="depositModal.cancel">Cancel</button>
-                </div>
+    <!-- Deposit Modal (with fixed amount buttons) -->
+    <div class="modal fade" id="depositModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" data-i18n="depositModal.title">Deposit Funds</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-3" data-i18n="depositModal.selectAmount">Select an amount to deposit:</p>
+            <div class="d-flex flex-wrap gap-2 deposit-grid">
+              <!-- each anchor has class deposit-amount and data-amount -->
+              <a class="btn btn-outline-light deposit-amount" data-amount="50" target="_blank">$50</a>
+              <a class="btn btn-outline-light deposit-amount" data-amount="100" target="_blank">$100</a>
+              <a class="btn btn-outline-light deposit-amount" data-amount="150" target="_blank">$150</a>
+              <a class="btn btn-outline-light deposit-amount" data-amount="200" target="_blank">$200</a>
+              <a class="btn btn-outline-light deposit-amount" data-amount="250" target="_blank">$250</a>
+              <a class="btn btn-outline-light deposit-amount" data-amount="300" target="_blank">$300</a>
+              <a class="btn btn-outline-light deposit-amount" data-amount="350" target="_blank">$350</a>
+              <a class="btn btn-outline-light deposit-amount" data-amount="400" target="_blank">$400</a>
+              <a class="btn btn-outline-light deposit-amount" data-amount="450" target="_blank">$450</a>
+              <a class="btn btn-outline-light deposit-amount" data-amount="500" target="_blank">$500</a>
+              <a class="btn btn-outline-light deposit-amount" data-amount="1000" target="_blank">$1000</a>
+              <a class="btn btn-outline-light deposit-amount" data-amount="2000" target="_blank">$2000</a>
+              <a class="btn btn-outline-light deposit-amount" data-amount="5000" target="_blank">$5000</a>
+              <a class="btn btn-outline-light deposit-amount" data-amount="10000" target="_blank">$10000</a>
             </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="depositModal.cancel">Close</button>
+          </div>
         </div>
+      </div>
     </div>
 
     <!-- Error Toast -->
@@ -598,9 +612,10 @@
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Translation dictionary
+        // ===== TRANSLATIONS (full object from original) =====
         const translations = {
             en: {
                 "nav.home": "Home",
@@ -609,6 +624,7 @@
                 "nav.ai": "AI Booster",
                 "balance": "Balance",
                 "deposit": "Deposit",
+                "withdraw": "Withdraw",
                 "logout": "Logout",
                 "hero.title": "Boost Your <span class='glow-text'>Crypto</span> Experience",
                 "hero.subtitle": "AI-powered tools, P2P trading, and predictive analytics in one platform",
@@ -654,10 +670,8 @@
                 "ai.activate": "Activate AI Booster",
                 "ai.learnMore": "Learn More",
                 "depositModal.title": "Deposit Funds",
-                "depositModal.amount": "Amount (USD)",
-                "depositModal.method": "Payment Method",
-                "depositModal.cancel": "Cancel",
-                "depositModal.proceed": "Proceed to Payment",
+                "depositModal.selectAmount": "Select an amount to deposit:",
+                "depositModal.cancel": "Close",
                 "footer.description": "Advanced cryptocurrency trading platform with AI-powered tools and P2P marketplace.",
                 "footer.services": "Services",
                 "footer.p2pTrading": "P2P Trading",
@@ -669,7 +683,8 @@
                 "footer.subscribe": "Subscribe",
                 "footer.emailPlaceholder": "Your email",
                 "footer.subscribeBtn": "Subscribe",
-                "footer.rights": "All rights reserved."
+                "footer.rights": "All rights reserved.",
+                "insufficientBalance": "Insufficient balance. Please deposit funds."
             },
             es: {
                 "nav.home": "Inicio",
@@ -678,6 +693,7 @@
                 "nav.ai": "Potenciador IA",
                 "balance": "Saldo",
                 "deposit": "Depositar",
+                "withdraw": "Retirar",
                 "logout": "Cerrar sesión",
                 "hero.title": "Potencia tu Experiencia con <span class='glow-text'>Cripto</span>",
                 "hero.subtitle": "Herramientas con IA, comercio P2P y análisis predictivo en una plataforma",
@@ -723,10 +739,8 @@
                 "ai.activate": "Activar Potenciador IA",
                 "ai.learnMore": "Saber Más",
                 "depositModal.title": "Depositar Fondos",
-                "depositModal.amount": "Cantidad (USD)",
-                "depositModal.method": "Método de Pago",
-                "depositModal.cancel": "Cancelar",
-                "depositModal.proceed": "Continuar al Pago",
+                "depositModal.selectAmount": "Seleccione una cantidad para depositar:",
+                "depositModal.cancel": "Cerrar",
                 "footer.description": "Plataforma avanzada de trading de criptomonedas con herramientas impulsadas por IA y mercado P2P.",
                 "footer.services": "Servicios",
                 "footer.p2pTrading": "Trading P2P",
@@ -738,7 +752,8 @@
                 "footer.subscribe": "Suscribirse",
                 "footer.emailPlaceholder": "Tu correo electrónico",
                 "footer.subscribeBtn": "Suscribirse",
-                "footer.rights": "Todos los derechos reservados."
+                "footer.rights": "Todos los derechos reservados.",
+                "insufficientBalance": "Saldo insuficiente. Por favor deposita fondos."
             },
             fr: {
                 "nav.home": "Accueil",
@@ -747,6 +762,7 @@
                 "nav.ai": "Booster IA",
                 "balance": "Solde",
                 "deposit": "Dépôt",
+                "withdraw": "Retrait",
                 "logout": "Déconnexion",
                 "hero.title": "Boostez votre Expérience <span class='glow-text'>Crypto</span>",
                 "hero.subtitle": "Outils alimentés par l'IA, trading P2P et analyses prédictives sur une seule plateforme",
@@ -792,10 +808,8 @@
                 "ai.activate": "Activer le Booster IA",
                 "ai.learnMore": "En Savoir Plus",
                 "depositModal.title": "Déposer des Fonds",
-                "depositModal.amount": "Montant (USD)",
-                "depositModal.method": "Méthode de Paiement",
-                "depositModal.cancel": "Annuler",
-                "depositModal.proceed": "Procéder au Paiement",
+                "depositModal.selectAmount": "Sélectionnez un montant à déposer :",
+                "depositModal.cancel": "Fermer",
                 "footer.description": "Plateforme avancée de trading de crypto-monnaies avec des outils alimentés par l'IA et un marché P2P.",
                 "footer.services": "Services",
                 "footer.p2pTrading": "Trading P2P",
@@ -807,7 +821,8 @@
                 "footer.subscribe": "S'abonner",
                 "footer.emailPlaceholder": "Votre email",
                 "footer.subscribeBtn": "S'abonner",
-                "footer.rights": "Tous droits réservés."
+                "footer.rights": "Tous droits réservés.",
+                "insufficientBalance": "Solde insuffisant. Veuillez déposer des fonds."
             },
             de: {
                 "nav.home": "Startseite",
@@ -816,6 +831,7 @@
                 "nav.ai": "AI-Booster",
                 "balance": "Guthaben",
                 "deposit": "Einzahlung",
+                "withdraw": "Abheben",
                 "logout": "Abmelden",
                 "hero.title": "Steigern Sie Ihre <span class='glow-text'>Krypto</span>-Erfahrung",
                 "hero.subtitle": "KI-gestützte Tools, P2P-Handel und prädiktive Analysen auf einer Plattform",
@@ -861,10 +877,8 @@
                 "ai.activate": "AI-Booster aktivieren",
                 "ai.learnMore": "Mehr erfahren",
                 "depositModal.title": "Geld einzahlen",
-                "depositModal.amount": "Betrag (USD)",
-                "depositModal.method": "Zahlungsmethode",
-                "depositModal.cancel": "Abbrechen",
-                "depositModal.proceed": "Zur Zahlung fortfahren",
+                "depositModal.selectAmount": "Wählen Sie einen Betrag zum Einzahlen:",
+                "depositModal.cancel": "Schließen",
                 "footer.description": "Fortgeschrittene Kryptowährungs-Handelsplattform mit KI-gestützten Tools und P2P-Marktplatz.",
                 "footer.services": "Dienstleistungen",
                 "footer.p2pTrading": "P2P-Handel",
@@ -876,7 +890,8 @@
                 "footer.subscribe": "Abonnieren",
                 "footer.emailPlaceholder": "Ihre E-Mail",
                 "footer.subscribeBtn": "Abonnieren",
-                "footer.rights": "Alle Rechte vorbehalten."
+                "footer.rights": "Alle Rechte vorbehalten.",
+                "insufficientBalance": "Unzureichendes Guthaben. Bitte tätigen Sie eine Einzahlung."
             },
             ko: {
                 "nav.home": "홈",
@@ -885,6 +900,7 @@
                 "nav.ai": "AI 부스터",
                 "balance": "잔액",
                 "deposit": "입금",
+                "withdraw": "출금",
                 "logout": "로그아웃",
                 "hero.title": "<span class='glow-text'>크립토</span> 경험을 강화하세요",
                 "hero.subtitle": "AI 기반 도구, P2P 거래 및 예측 분석을 한 플랫폼에서",
@@ -930,10 +946,8 @@
                 "ai.activate": "AI 부스터 활성화",
                 "ai.learnMore": "더 알아보기",
                 "depositModal.title": "자금 입금",
-                "depositModal.amount": "금액 (USD)",
-                "depositModal.method": "결제 방법",
-                "depositModal.cancel": "취소",
-                "depositModal.proceed": "결제 진행",
+                "depositModal.selectAmount": "입금할 금액을 선택하세요:",
+                "depositModal.cancel": "닫기",
                 "footer.description": "AI 기반 도구와 P2P 마켓플레이스를 갖춘 고급 암호화폐 거래 플랫폼.",
                 "footer.services": "서비스",
                 "footer.p2pTrading": "P2P 거래",
@@ -945,242 +959,191 @@
                 "footer.subscribe": "구독",
                 "footer.emailPlaceholder": "이메일 주소",
                 "footer.subscribeBtn": "구독",
-                "footer.rights": "모든 권리 보유."
-            },
-            ja: {
-                "nav.home": "ホーム",
-                "nav.p2p": "P2Pマーケットプレイス",
-                "nav.options": "オプション取引",
-                "nav.ai": "AIブースター",
-                "balance": "残高",
-                "deposit": "入金",
-                "logout": "ログアウト",
-                "hero.title": "<span class='glow-text'>クリプト</span>体験を向上させる",
-                "hero.subtitle": "AI搭載ツール、P2P取引、予測分析を1つのプラットフォームで",
-                "hero.startTrading": "取引を開始",
-                "hero.tryAi": "AIブースターを試す",
-                "features.title": "私たちの<span class='text-gradient'>強力な</span>機能",
-                "features.aiBooster": "AIブースター",
-                "features.aiBoosterDesc": "高度なAIアルゴリズムで取引戦略を強化",
-                "features.tryNow": "今すぐ試す",
-                "features.p2pMarket": "P2Pマーケットプレイス",
-                "features.p2pMarketDesc": "最良のレートで他のユーザーと直接暗号資産を売買",
-                "features.exploreOffers": "オファーを探索",
-                "features.optionsPredictor": "オプション予測ツール",
-                "features.optionsPredictorDesc": "高精度でオプションの動きを予測する高度な分析",
-                "features.viewPredictions": "予測を表示",
-                "p2p.title": "最高の<span class='text-gradient'>P2Pオファー</span>",
-                "p2p.viewAll": "すべて表示",
-                "p2p.seller": "売り手",
-                "p2p.coin": "コイン",
-                "p2p.price": "価格",
-                "p2p.limits": "制限",
-                "p2p.payment": "支払い",
-                "p2p.action": "操作",
-                "p2p.buy": "購入",
-                "p2p.paymentMethods1": "銀行振込、PayPal",
-                "p2p.paymentMethods2": "クレジットカード、Wise",
-                "p2p.paymentMethods3": "PayPal、Venmo",
-                "options.title": "オプション<span class='text-gradient'>予測ツール</span>",
-                "options.live": "ライブ",
-                "options.btcTitle": "BTC週次オプション",
-                "options.ethTitle": "ETH月次オプション",
-                "options.accuracy": "予測精度",
-                "options.strategy": "推奨戦略",
-                "options.btcStrategy": "行使価格$65,000、3日満期のコールオプションを購入",
-                "options.ethStrategy": "行使価格$3,200～$3,500、30日満期のプットオプションをスプレッド",
-                "options.viewAnalysis": "詳細分析を表示",
-                "ai.title": "AI取引<span class='text-gradient'>ブースター</span>",
-                "ai.subtitle": "私たちの高度なAIは市場データを24時間365日分析し、最適な取引シグナルと自動化された戦略を提供します。",
-                "ai.feature1": "リアルタイム市場分析",
-                "ai.feature2": "自動化された取引実行",
-                "ai.feature3": "リスク管理アルゴリズム",
-                "ai.feature4": "カスタマイズ可能な戦略",
-                "ai.activate": "AIブースターを有効化",
-                "ai.learnMore": "詳細を見る",
-                "depositModal.title": "資金を入金",
-                "depositModal.amount": "金額（USD）",
-                "depositModal.method": "支払い方法",
-                "depositModal.cancel": "キャンセル",
-                "depositModal.proceed": "支払いに進む",
-                "footer.description": "AI搭載ツールとP2Pマーケットプレイスを備えた高度な暗号資産取引プラットフォーム。",
-                "footer.services": "サービス",
-                "footer.p2pTrading": "P2P取引",
-                "footer.options": "オプション",
-                "footer.aiBooster": "AIブースター",
-                "footer.company": "会社",
-                "footer.about": "会社概要",
-                "footer.contact": "お問い合わせ",
-                "footer.subscribe": "購読",
-                "footer.emailPlaceholder": "メールアドレス",
-                "footer.subscribeBtn": "購読",
-                "footer.rights": "全著作権所有。"
+                "footer.rights": "모든 권리 보유.",
+                "insufficientBalance": "잔액이 부족합니다. 입금해 주세요."
             }
         };
 
+        // ===== END TRANSLATIONS =====
+
         document.addEventListener('DOMContentLoaded', function() {
+            // --- Config: Set deposit links per amount here ---
+            // Replace the placeholder URLs with your real deposit URLs.
+            const DEPOSIT_LINKS = {
+                50: "https://nowpayments.io/payment/?iid=6104909379",
+                100: "https://nowpayments.io/payment/?iid=4733269114",
+                150: "https://nowpayments.io/payment/?iid=5585799096",
+                200: "https://nowpayments.io/payment/?iid=6350633299",
+                250: "https://nowpayments.io/payment/?iid=5919200502",
+                300: "https://nowpayments.io/payment/?iid=4696682747",
+                350: "https://nowpayments.io/payment/?iid=6350343228",
+                400: "https://nowpayments.io/payment/?iid=5844099248",
+                450: "https://nowpayments.io/payment/?iid=4490254202",
+                500: "https://nowpayments.io/payment/?iid=5638459586",
+                1000: "https://nowpayments.io/payment/?iid=6147846345",
+                2000: "https://nowpayments.io/payment/?iid=5655013199",
+                5000: "https://nowpayments.io/payment/?iid=5137019242",
+                10000: "https://nowpayments.io/payment/?iid=4589216190"
+            };
+
             // User balance
             let userBalance = 0;
             const balanceElement = document.getElementById('userBalance');
             const errorToast = document.getElementById('errorToast');
             const errorMessage = document.getElementById('errorMessage');
             const languageSelector = document.getElementById('languageSelector');
-            
-            // Set initial language
+
+            // Initial language
             let currentLanguage = 'en';
-            
-            // Function to update translations
+
+            // Apply translations to elements with data-i18n
             function updateTranslations(lang) {
                 currentLanguage = lang;
-                const langData = translations[lang];
-                
-                // Update all elements with data-i18n attribute
+                const langData = translations[lang] || translations['en'];
                 document.querySelectorAll('[data-i18n]').forEach(element => {
                     const key = element.getAttribute('data-i18n');
-                    if (langData[key]) {
+                    if (!key) return;
+                    const value = langData[key];
+                    if (value) {
                         if (element.tagName === 'INPUT' && element.hasAttribute('placeholder')) {
-                            element.placeholder = langData[key];
+                            element.placeholder = value;
                         } else {
-                            element.innerHTML = langData[key];
+                            element.innerHTML = value;
                         }
                     }
                 });
+                // update balance label explicitly
+                const balanceLabel = langData['balance'] || 'Balance';
+                document.querySelector('.balance-display').childNodes[0].textContent = balanceLabel + ': $';
             }
-            
-            // Language selector change event
-            languageSelector.addEventListener('change', function() {
-                updateTranslations(this.value);
-            });
-            
-            // Show error function
+
+            updateTranslations(currentLanguage);
+
             function showError(message) {
                 errorMessage.textContent = message;
                 errorToast.style.display = 'block';
-                setTimeout(() => {
-                    errorToast.style.display = 'none';
-                }, 3000);
+                setTimeout(() => { errorToast.style.display = 'none'; }, 3000);
             }
-            
-            // Check balance before action
+
             function checkBalance(requiredAmount) {
                 if (userBalance < requiredAmount) {
-                    const errorMsg = translations[currentLanguage]['insufficientBalance'] || `Insufficient balance. Please deposit at least $${requiredAmount}`;
-                    showError(errorMsg);
+                    const err = translations[currentLanguage] && translations[currentLanguage]['insufficientBalance'] ? translations[currentLanguage]['insufficientBalance'] : `Insufficient balance. Please deposit at least $${requiredAmount}`;
+                    showError(err);
                     return false;
                 }
                 return true;
             }
-            
-            // Function to refresh P2P offers
-            function refreshP2POffers() {
-                // Simulate fetching new data
-                const tableBody = document.querySelector('#p2pTable tbody');
-                const rows = tableBody.querySelectorAll('tr');
-                
-                // Randomly update prices (simulating market changes)
-                rows.forEach(row => {
-                    const priceCell = row.cells[2];
-                    const currentPrice = parseFloat(priceCell.textContent.replace(/[^0-9.]/g, ''));
-                    const changePercent = (Math.random() * 2 - 1) * 0.5; // -0.5% to +0.5%
-                    const newPrice = currentPrice * (1 + changePercent/100);
-                    
-                    if (row.cells[1].textContent.includes('BTC')) {
-                        priceCell.textContent = '$' + newPrice.toFixed(2);
-                    } else if (row.cells[1].textContent.includes('ETH')) {
-                        priceCell.textContent = '$' + newPrice.toFixed(2);
-                    } else if (row.cells[1].textContent.includes('USDT')) {
-                        priceCell.textContent = '$' + newPrice.toFixed(3);
-                    }
-                });
-                
-                // Add visual effect
-                tableBody.classList.add('animate__animated', 'animate__fadeIn');
-                setTimeout(() => {
-                    tableBody.classList.remove('animate__animated', 'animate__fadeIn');
-                }, 1000);
+
+            // Attach deposit amount links to modal buttons
+            document.querySelectorAll('.deposit-amount').forEach(a => {
+                const amount = a.getAttribute('data-amount');
+                const href = DEPOSIT_LINKS[amount] || "#";
+                a.href = href;
+            });
+
+            // Update displayed balance
+            function updateDisplayedBalance() {
+                balanceElement.textContent = userBalance.toFixed(2);
             }
-            
-            // Set interval to refresh P2P offers every 5 minutes
-            setInterval(refreshP2POffers, 5 * 60 * 1000);
-            
-            // Deposit functionality
-            document.getElementById('confirmDepositBtn').addEventListener('click', function() {
-                const amount = parseFloat(document.getElementById('depositAmount').value);
-                if (amount >= 100) {
-                    userBalance += amount;
-                    balanceElement.textContent = userBalance.toFixed(2);
-                    bootstrap.Modal.getInstance(document.getElementById('depositModal')).hide();
-                } else {
-                    const errorMsg = translations[currentLanguage]['minDeposit'] || 'Minimum deposit amount is $100';
-                    showError(errorMsg);
+            updateDisplayedBalance();
+
+            // Withdraw handler
+            const withdrawBtn = document.getElementById('withdrawBtn');
+            withdrawBtn.addEventListener('click', function() {
+                if (userBalance <= 0) {
+                    const msg = translations[currentLanguage] && translations[currentLanguage]['insufficientBalance'] ? translations[currentLanguage]['insufficientBalance'] : "Your balance is 0.00$, please deposit first.";
+                    showError(msg);
+                    return;
                 }
+                alert("Withdrawal request created. Processing...");
             });
-            
-            // Button click handlers with balance checks
-            document.getElementById('startTradingBtn').addEventListener('click', function() {
-                if (!checkBalance(100)) return;
-                alert(translations[currentLanguage]['startingTrading'] || 'Starting trading session...');
+
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                window.location.href = 'https://hixhunt.github.io/BoostX-AI-Login/';
             });
-            
-            document.getElementById('tryAiBtn').addEventListener('click', function() {
-                if (!checkBalance(100)) return;
-                alert(translations[currentLanguage]['activatingAiTrial'] || 'Activating AI Booster trial...');
+
+            // Example button handlers with balance checks (kept as original)
+            const mappingButtons = [
+                {id:'startTradingBtn', amount:100, msgKey:'startingTrading', fallback:'Starting trading session...'},
+                {id:'tryAiBtn', amount:100, msgKey:'activatingAiTrial', fallback:'Activating AI Booster trial...'},
+                {id:'aiBoosterBtn', amount:100, msgKey:'openingAiBooster', fallback:'Opening AI Booster...'},
+                {id:'p2pMarketBtn', amount:100, msgKey:'openingP2pMarket', fallback:'Opening P2P Marketplace...'},
+                {id:'optionsPredictorBtn', amount:100, msgKey:'openingOptionsPredictor', fallback:'Opening Options Predictor...'},
+                {id:'btcAnalysisBtn', amount:100, msgKey:'showingBtcAnalysis', fallback:'Showing BTC analysis...'},
+                {id:'ethAnalysisBtn', amount:100, msgKey:'showingEthAnalysis', fallback:'Showing ETH analysis...'},
+                {id:'activateAiBtn', amount:100, msgKey:'activatingAiBooster', fallback:'Activating AI Booster...'}
+            ];
+            mappingButtons.forEach(b => {
+                const el = document.getElementById(b.id);
+                if (el) el.addEventListener('click', function() {
+                    if (!checkBalance(b.amount)) return;
+                    alert(translations[currentLanguage][b.msgKey] || b.fallback);
+                });
             });
-            
-            document.getElementById('aiBoosterBtn').addEventListener('click', function() {
-                if (!checkBalance(100)) return;
-                alert(translations[currentLanguage]['openingAiBooster'] || 'Opening AI Booster...');
-            });
-            
-            document.getElementById('p2pMarketBtn').addEventListener('click', function() {
-                if (!checkBalance(100)) return;
-                alert(translations[currentLanguage]['openingP2pMarket'] || 'Opening P2P Marketplace...');
-            });
-            
-            document.getElementById('optionsPredictorBtn').addEventListener('click', function() {
-                if (!checkBalance(100)) return;
-                alert(translations[currentLanguage]['openingOptionsPredictor'] || 'Opening Options Predictor...');
-            });
-            
-            document.getElementById('btcAnalysisBtn').addEventListener('click', function() {
-                if (!checkBalance(100)) return;
-                alert(translations[currentLanguage]['showingBtcAnalysis'] || 'Showing BTC analysis...');
-            });
-            
-            document.getElementById('ethAnalysisBtn').addEventListener('click', function() {
-                if (!checkBalance(100)) return;
-                alert(translations[currentLanguage]['showingEthAnalysis'] || 'Showing ETH analysis...');
-            });
-            
-            document.getElementById('activateAiBtn').addEventListener('click', function() {
-                if (!checkBalance(100)) return;
-                alert(translations[currentLanguage]['activatingAiBooster'] || 'Activating AI Booster...');
-            });
-            
-            document.getElementById('learnMoreAiBtn').addEventListener('click', function() {
-                alert(translations[currentLanguage]['showingAiInfo'] || 'Showing AI Booster information...');
-            });
-            
+
             // P2P buy buttons
-            document.getElementById('buyOffer1').addEventListener('click', function() {
+            const buy1 = document.getElementById('buyOffer1');
+            if (buy1) buy1.addEventListener('click', function() {
                 if (!checkBalance(100)) return;
                 alert(translations[currentLanguage]['initiatingBtcPurchase'] || 'Initiating BTC purchase...');
             });
-            
-            document.getElementById('buyOffer2').addEventListener('click', function() {
+            const buy2 = document.getElementById('buyOffer2');
+            if (buy2) buy2.addEventListener('click', function() {
                 if (!checkBalance(100)) return;
                 alert(translations[currentLanguage]['initiatingEthPurchase'] || 'Initiating ETH purchase...');
             });
-            
-            document.getElementById('buyOffer3').addEventListener('click', function() {
+            const buy3 = document.getElementById('buyOffer3');
+            if (buy3) buy3.addEventListener('click', function() {
                 if (!checkBalance(100)) return;
                 alert(translations[currentLanguage]['initiatingUsdtPurchase'] || 'Initiating USDT purchase...');
             });
+
+            // Block clicks on ALL buttons/links when balance == 0, except:
+            // - deposit modal opener (id="depositBtn")
+            // - deposit-amount links (class="deposit-amount")
+            // - withdrawBtn, logoutBtn
+            document.querySelectorAll('button, a').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    const isDepositOpener = (el.id === 'depositBtn');
+                    const isWithdraw = (el.id === 'withdrawBtn');
+                    const isLogout = (el.id === 'logoutBtn');
+                    const isDepositAmount = el.classList && el.classList.contains('deposit-amount');
+                    // allow footer/other links? user asked "на все кнопки" — we block interactive elements (buttons/anchors) except allowed ones
+                    if (userBalance <= 0 && !isDepositOpener && !isWithdraw && !isLogout && !isDepositAmount) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const msg = translations[currentLanguage] && translations[currentLanguage]['insufficientBalance'] ? translations[currentLanguage]['insufficientBalance'] : "Your balance is 0.00$, please deposit first.";
+                        showError(msg);
+                        // if clicked a button inside modal or similar, ensure modal remains open/closed as expected
+                    }
+                }, { capture: true });
+            });
+
+            // Language switcher
+            languageSelector.addEventListener('change', function() {
+                updateTranslations(this.value);
+            });
+
+            // Expose function to set balance (for testing / integration)
+            window.setUserBalance = function(amount) {
+                userBalance = Number(amount) || 0;
+                updateDisplayedBalance();
+            };
+
+            // Optionally, load saved balance from localStorage (not required, but handy):
+            if (localStorage.getItem('boostx_user_balance')) {
+                const saved = parseFloat(localStorage.getItem('boostx_user_balance'));
+                if (!isNaN(saved)) {
+                    userBalance = saved;
+                    updateDisplayedBalance();
+                }
+            }
+            // Save balance on change (if you call setUserBalance, you may also call saveUserBalance)
+            window.saveUserBalance = function() {
+                localStorage.setItem('boostx_user_balance', userBalance.toString());
+            };
         });
     </script>
 </body>
-
 </html>
-
-
-
